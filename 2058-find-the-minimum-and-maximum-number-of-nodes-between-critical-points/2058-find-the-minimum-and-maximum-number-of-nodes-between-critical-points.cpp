@@ -12,12 +12,8 @@ class Solution {
 public:
     vector<int> nodesBetweenCriticalPoints(ListNode* head) {
         
-        // Pushing all the elements in an array for easier access, otherwise we can directly do with the linked list also
-        vector<int> arr;
-        while(head!=NULL){
-            arr.push_back(head->val);
-            head = head->next;
-        }
+        if(head->next->next==NULL)
+            return {-1,-1};
 
         // Initialize values
         int mini = INT_MAX;
@@ -25,10 +21,13 @@ public:
         int prev = -1, FirstCriticalPoint = -1, LastCriticalPoint = -1;
 
         // Traversing the array
-        for(int i=1 ; i<arr.size()-1 ; i++){
+        int prevNodeVal = head->val;
+        int i=0;
+        head = head->next;
+        while(head->next!=NULL){
 
             // Checking for both minima and maxima condition simultaneously
-            if((arr[i]<arr[i-1] && arr[i]<arr[i+1]) || (arr[i]>arr[i-1] && arr[i]>arr[i+1]))
+            if((head->val<prevNodeVal && head->val<head->next->val) || (head->val>prevNodeVal && head->val>head->next->val))
             {
                 if(FirstCriticalPoint == -1){
                     FirstCriticalPoint = i;
@@ -45,6 +44,9 @@ public:
                     prev = i;
                 }
             }
+            i++;
+            prevNodeVal = head->val;
+            head = head->next;
         }
 
         // Calculate max distance 
